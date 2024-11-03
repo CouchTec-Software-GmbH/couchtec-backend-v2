@@ -6,9 +6,7 @@ use std::sync::Arc;
 use tower_http::cors::{Any, CorsLayer};
 
 use crate::{
-    handlers::{
-        auth::{login, pre_register, pre_reset_password, register, reset_password},
-    },
+    handlers::{auth::{login, pre_register, pre_reset_password, register, reset_password}, contact::{contact}},
     AppState,
 };
 
@@ -23,6 +21,7 @@ pub fn create_router(app_state: Arc<AppState>) -> Router {
         .route("/api/login", post(login))
         .route("/api/pre-reset-password", post(pre_reset_password))
         .route("/api/reset-password", post(reset_password))
+        .route("/api/contact", post(contact))
         .layer(cors)
         .with_state(app_state)
 }

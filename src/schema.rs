@@ -3,9 +3,8 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PreRegisterSchema {
     pub email: String,
-    pub first_name: String,
-    pub last_name: String,
     pub password: String,
+    pub newsletter: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -36,4 +35,11 @@ pub struct ResetPasswordSchema {
 pub struct SessionVerifySchema {
     pub email: String,
     pub session_token: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ContactSchema {
+    pub name: String,
+    pub email: String,
+    pub message: String,
 }

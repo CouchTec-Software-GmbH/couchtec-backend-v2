@@ -63,8 +63,7 @@ pub async fn pre_register(
             let viewer_doc = json!({
                 "type": "viewer",
                 "email": body.email,
-                "first_name": body.first_name,
-                "last_name": body.last_name,
+                "newsletter": body.newsletter,
                 "hashed_password": hashed_password,
                 "salt": salt,
                 "verified": false,
@@ -98,7 +97,7 @@ pub async fn pre_register(
   
     let _ = data
         .email_manager
-        .send_verify_email(&body.email, &data.url, &verification_code, &body.first_name)
+        .send_verify_email(&body.email, &data.url, &verification_code, "")
         .map_err(|e| {
             println!("Something went wrong while trying to send verication E-Mail: {:?}", e);
             internal_server_error()
@@ -271,7 +270,7 @@ pub async fn pre_reset_password(
     
     let _ = data
         .email_manager
-        .send_reset_password_email(&body.email, &data.url, &code, &viewer_doc["first_name"].as_str().unwrap_or("lieber CouchTec Kunde"))
+        .send_reset_password_email(&body.email, &data.url, &code, &viewer_doc["first_name"].as_str().unwrap_or(""))
         .map_err(|e| {
             println!("Something went wrong while trying to send reset password E-Mail: {:?}", e);
             internal_server_error()

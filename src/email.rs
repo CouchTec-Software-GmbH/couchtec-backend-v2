@@ -29,6 +29,42 @@ impl EmailManager {
             email: smtp_email.to_string(),
         })
     }
+    pub fn send_contact_email(
+        &self,
+        name: &str,
+        email: &str,
+        message: &str,
+    ) -> Result<(), EmailManagerError> {
+        println!("send_contact_email");
+        let from_address: Address = self.email.parse()?;
+        // let recipient_email = "harald.kisch@couchtec.com";
+        let recipient_email = "linus@couchtec.com";
+        let to_address: Address = recipient_email.parse()?;
+
+        println!("To and from email parsed");
+
+        let subject = "CouchTec: Neues Kontaktformular eingereicht.";
+        let body = format!(
+            r#"
+            {} mit E-Mail: {} schreibt:
+            
+            {}
+            "#,
+            name, email, message
+        );
+
+        let email = Message::builder()
+            .from(from_address.into())
+            .to(to_address.into())
+            .subject(subject)
+            .body(body.to_string())?;
+
+        println!("Email build");
+
+        self.smtp_transport.send(&email)?;
+        Ok(())
+    }
+
     pub fn send_reset_password_email(
         &self,
         email: &str,
@@ -41,7 +77,7 @@ impl EmailManager {
 
         let subject = "Passwort zurücksetzen";
         let reset_link = format!(
-            "{}/reset-password?c={}&e={}",
+            "{}/auth?c={}&e={}",
             url,
             urlencoding::encode(reset_password_token),
             urlencoding::encode(email)
@@ -233,7 +269,7 @@ impl EmailManager {
                   <!-- Email Content -->
                   <div class="content">
                     <p>Hey {recipient_name},</p>
-                    <p>Wir haben eine Anfrage erhalten, Ihre E-Mail zu verifizieren.</p>
+                    <p>Wir haben eine Anfrage erhalten, deine E-Mail zu verifizieren.</p>
                     <p>Wenn du die Anfrage nicht gestellt haben, ignoriere diese Nachricht einfach. Ansonsten kannst du deine E-Mail verifizieren, indem du auf die Schaltfläche unten klickst.</p>
 
                     <!-- Reset Button -->
